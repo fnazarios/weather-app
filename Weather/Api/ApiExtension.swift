@@ -7,10 +7,10 @@ func url(route: MoyaTarget) -> String {
     return route.baseURL.URLByAppendingPathComponent(route.path).absoluteString
 }
 
-func endpointsClosure() -> (WeatherApi) -> Endpoint<WeatherApi> {
-    return { (target: WeatherApi) -> Endpoint<WeatherApi> in
+func endpointsClosure() -> (Api) -> Endpoint<Api> {
+    return { (target: Api) -> Endpoint<Api> in
         let parameterEncoding: Moya.ParameterEncoding = (target.method == .POST) ? .JSON : .URL
-        return Endpoint<WeatherApi>(URL: url(target), sampleResponseClosure: { () -> EndpointSampleResponse in
+        return Endpoint<Api>(URL: url(target), sampleResponseClosure: { () -> EndpointSampleResponse in
             return EndpointSampleResponse.NetworkResponse(200, target.sampleData)
             }, method: target.method, parameters: target.parameters, parameterEncoding: parameterEncoding)
     }

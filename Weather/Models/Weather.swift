@@ -1,9 +1,16 @@
-//
-//  Weather.swift
-//  Weather
-//
-//  Created by Fernando Sousa on 18/11/15.
-//  Copyright © 2015 Think Mob. All rights reserved.
-//
-
 import Foundation
+import Argo
+import Curry
+
+struct Weather {
+    let name: String?
+    let degress: Double?
+}
+
+extension Weather: Decodable {
+    static func decode(j: JSON) -> Decoded<Weather> {
+        return curry(Weather.init)
+            <^> j <|? "name"
+            <*> j <|? ["main", "temp"]
+    }
+}

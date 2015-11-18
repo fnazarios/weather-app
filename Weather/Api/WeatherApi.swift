@@ -1,9 +1,15 @@
-//
-//  WeatherApi.swift
-//  Weather
-//
-//  Created by Fernando Sousa on 18/11/15.
-//  Copyright © 2015 Think Mob. All rights reserved.
-//
-
 import Foundation
+import RxMoya
+import RxSwift
+import Argo
+
+class WeatherApi {
+    
+    static var provider = RxMoyaProvider<Api>(endpointClosure: endpointsClosure())
+    
+    class func weather(city: String?) -> Observable<Weather> {
+        return provider.request(.Weather(city))
+            .successfulStatusCodes()
+            .mapToDomain()
+    }
+}

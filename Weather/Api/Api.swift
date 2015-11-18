@@ -1,11 +1,11 @@
 import Foundation
 import RxMoya
 
-enum WeatherApi {
-    case Weather(String)
+enum Api {
+    case Weather(String?)
 }
 
-extension WeatherApi : MoyaTarget {
+extension Api : MoyaTarget {
     var baseURL: NSURL {
         return NSURL(string: "http://api.openweathermap.org/data/2.5")!
     }
@@ -27,7 +27,11 @@ extension WeatherApi : MoyaTarget {
     var parameters: [String: AnyObject]? {
         switch self {
         case .Weather(let city):
-            return ["q": city, "appid": "2de143494c0b295cca9337e1e96b00e0"]
+            if let city = city {
+                return ["q": city, "appid": "2de143494c0b295cca9337e1e96b00e0"]
+            }
+            
+            return ["q": "", "appid": "2de143494c0b295cca9337e1e96b00e0"]
         }
     }
     

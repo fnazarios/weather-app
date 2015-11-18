@@ -1,35 +1,39 @@
-//
-//  WeatherViewController.swift
-//  Weather
-//
-//  Created by Fernando Sousa on 18/11/15.
-//  Copyright © 2015 Think Mob. All rights reserved.
-//
-
 import UIKit
+import RxSwift
+import RxCocoa
 
 class WeatherViewController: UIViewController {
 
+    @IBOutlet weak var nameTextField: UITextField!
+    
+    @IBOutlet weak var degreesLabel: UILabel!
+    @IBOutlet weak var cityNameLabel: UILabel!
+    
+    lazy var disposeBag = DisposeBag()
+    lazy var viewModel = WeatherViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+        //Binding the UI
+        bindSourceToLabel(viewModel.cityName, label: cityNameLabel)
+        bindSourceToLabel(viewModel.degrees, label: degreesLabel)
+        
+        nameTextField.rx_text
+            .subscribeNext { text in
+                self.viewModel.searchText.onNext(text)
+            }
+            .addDisposableTo(disposeBag)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func bindSourceToLabel(source: PublishSubject<String?>, label: UILabel) {
+        source
+            .subscribeNext { text in
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    label.text = text
+                })
+            }
+            .addDisposableTo(disposeBag)
     }
-    */
 
 }

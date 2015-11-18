@@ -1,0 +1,5 @@
+github "Moya/Moya"
+github "thoughtbot/Argo"
+github "thoughtbot/Curry"
+github "Quick/Quick"
+github "Quick/Nimble"
